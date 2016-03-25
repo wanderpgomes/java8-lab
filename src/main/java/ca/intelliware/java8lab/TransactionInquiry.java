@@ -20,7 +20,22 @@ public class TransactionInquiry {
 	      new Transaction(mario, 2012, 710),	
 	      new Transaction(mario, 2012, 700),
 	      new Transaction(alan, 2012, 950)
-	  );	
+	  );
+
+      /**
+       *  Find how many transactions are from 2012.
+       */
+      public long findNumberOfTransactionsFrom2012() {
+
+          long transactionsFrom2012 = 0;
+
+          for (Transaction transaction : transactions) {
+              if (transaction.getYear() == 2012) {
+                  transactionsFrom2012++;
+              }
+          }
+          return transactionsFrom2012;
+      }
       
       /**
        *  Find all transactions from year 2011 and sort them by value (small to high).
@@ -96,7 +111,7 @@ public class TransactionInquiry {
     	   names.sort(new Comparator<String>() {
 		       @Override
 			   public int compare(String n1, String n2) {
-				   return n1.compareTo(n2);
+                   return n1.compareTo(n2);
 			   }
 		   });
     	   
@@ -141,9 +156,20 @@ public class TransactionInquiry {
       public int getHighestTransactionValue(){
     	  int max = 0;
     	  for (Transaction transaction : transactions) {
-    		  max = Integer.max(max, transaction.getValue());
+    		  max = Math.max(max, transaction.getValue());
     	  }
     	  return max;
+      }
+
+      /**
+       *  Get the sum of all transaction values.
+       */
+      public int getTransactionTotal(){
+         int sum = 0;
+         for (Transaction transaction : transactions) {
+            sum += transaction.getValue();
+         }
+         return sum;
       }
      
 }

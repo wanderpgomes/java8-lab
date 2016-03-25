@@ -11,12 +11,20 @@ import org.junit.Test;
 
 public class TransactionInquiryTest {
 	
-	private TransactionInquiryJ8 fixture;
+	private TransactionInquiry fixture;
 	
 	@Before
 	public void setUp() {
-		fixture = new TransactionInquiryJ8();
+		fixture = new TransactionInquiry();
 	}
+
+    @Test
+    public void testFindTransactionsFrom2012() {
+
+        long result = fixture.findNumberOfTransactionsFrom2012();
+
+        assertEquals(4, result);
+    }
 
 	@Test
 	public void testFindTransactionsFrom2011() {
@@ -84,5 +92,12 @@ public class TransactionInquiryTest {
 		
 		assertEquals(1000, result);
 	}
+
+    @Test
+    public void testGetTransactionTotal() {
+        int result = fixture.getTransactionTotal();
+
+        assertEquals(4060, result);
+    }
 
 }

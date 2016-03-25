@@ -21,8 +21,18 @@ public class TransactionInquiryJ8 {
 	      new Transaction(mario, 2012, 710),	
 	      new Transaction(mario, 2012, 700),
 	      new Transaction(alan, 2012, 950)
-	  );	
-      
+	  );
+
+
+      /**
+       *  Find how many transactions are from 2012.
+       */
+      public long findNumberOfTransactionsFrom2012() {
+          return transactions.stream()
+                  .filter(transaction -> transaction.getYear() == 2012)
+                  .count();
+      }
+
       /**
        *  Find all transactions from year 2011 and sort them by value (small to high).
        */ 
@@ -74,7 +84,7 @@ public class TransactionInquiryJ8 {
     	  return transactions.stream()
                              .anyMatch(transaction -> transaction.getTrader().getCity().equals("Milan"));
       }
-      
+
       /**
        * Update all transactions so that the traders from Milan are set to Cambridge.
        */
@@ -94,6 +104,15 @@ public class TransactionInquiryJ8 {
     	  return transactions.stream()
 	                         .map(Transaction::getValue)
 	                         .reduce(0, Integer::max);
+      }
+
+     /**
+      *  Get the sum of all transaction values.
+      */
+      public int getTransactionTotal(){
+          return transactions.stream()
+                  .map(Transaction::getValue)
+                  .reduce(0, Integer::sum);
       }
      
 }
