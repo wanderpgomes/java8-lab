@@ -1,4 +1,4 @@
-package ca.intelliware.java8lab;
+package ca.intelliware.java8lab.transaction;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -29,8 +29,8 @@ public class TransactionInquiryJ8 {
        */
       public long findNumberOfTransactionsFrom2012() {
           return transactions.stream()
-                  .filter(transaction -> transaction.getYear() == 2012)
-                  .count();
+                             .filter(transaction -> transaction.getYear() == 2012)
+                             .count();
       }
 
       /**
@@ -70,11 +70,10 @@ public class TransactionInquiryJ8 {
        */
       public String getAllTradersNames(){
           return transactions.stream()
-                      .map(transaction -> transaction.getTrader().getName())
-                      .distinct()
-                      .sorted()
-                      .reduce("", (n1, n2) -> n1 + n2);
-      
+                             .map(transaction -> transaction.getTrader().getName())
+                             .distinct()
+                             .sorted()
+                             .reduce("", (n1, n2) -> n1 + n2);
       }
       
       /**
@@ -111,8 +110,8 @@ public class TransactionInquiryJ8 {
       */
       public int getTransactionTotal(){
           return transactions.stream()
-                  .map(Transaction::getValue)
-                  .reduce(0, Integer::sum);
+                             .map(Transaction::getValue)
+                             .reduce(0, Integer::sum);
       }
      
 }

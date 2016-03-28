@@ -1,4 +1,4 @@
-package ca.intelliware.java8lab;
+package ca.intelliware.java8lab.transaction;
 public  class Trader{
 	
 	private String name;

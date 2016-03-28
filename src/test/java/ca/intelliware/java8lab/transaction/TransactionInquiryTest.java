@@ -1,4 +1,4 @@
-package ca.intelliware.java8lab;
+package ca.intelliware.java8lab.transaction;
 
 
 import static org.junit.Assert.assertEquals;
@@ -11,11 +11,11 @@ import org.junit.Test;
 
 public class TransactionInquiryTest {
 	
-	private TransactionInquiry fixture;
+	private TransactionInquiryJ8 fixture;
 	
 	@Before
 	public void setUp() {
-		fixture = new TransactionInquiry();
+		fixture = new TransactionInquiryJ8();
 	}
 
     @Test
