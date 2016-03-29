@@ -20,8 +20,6 @@ public class MenuInquiry {
                     new Dish("prawns", false, 400, Dish.Type.FISH),
                     new Dish("salmon", false, 450, Dish.Type.FISH));
 
-    public enum CaloricLevel { DIET, NORMAL, FAT };
-
     /**
      *  Find the name of all the dishes with less than 400 calories.
      */
@@ -71,9 +69,9 @@ public class MenuInquiry {
         return dishesByType;
     }
 
-    public Map<CaloricLevel, List<Dish>> groupDishesByCaloricLevel() {
+    public Map<Dish.CaloricLevel, List<Dish>> groupDishesByCaloricLevel() {
 
-        Map<CaloricLevel, List<Dish>> dishesByCaloricLevel=  new HashMap();
+        Map<Dish.CaloricLevel, List<Dish>> dishesByCaloricLevel=  new HashMap();
 
         List<Dish> dietDishes = new ArrayList();
         List<Dish> normalDishes = new ArrayList();
@@ -88,21 +86,21 @@ public class MenuInquiry {
         }
 
         if (!dietDishes.isEmpty()) {
-            dishesByCaloricLevel.put(CaloricLevel.DIET, dietDishes);
+            dishesByCaloricLevel.put(Dish.CaloricLevel.DIET, dietDishes);
         }
         if (!normalDishes.isEmpty()) {
-            dishesByCaloricLevel.put(CaloricLevel.NORMAL, normalDishes);
+            dishesByCaloricLevel.put(Dish.CaloricLevel.NORMAL, normalDishes);
         }
         if (!fatDishes.isEmpty()) {
-            dishesByCaloricLevel.put(CaloricLevel.FAT, fatDishes);
+            dishesByCaloricLevel.put(Dish.CaloricLevel.FAT, fatDishes);
         }
 
         return dishesByCaloricLevel;
     }
 
-    public Map<Dish.Type, Map<CaloricLevel, List<Dish>>> groupDishedByTypeAndCaloricLevel() {
+    public Map<Dish.Type, Map<Dish.CaloricLevel, List<Dish>>> groupDishedByTypeAndCaloricLevel() {
 
-        Map<Dish.Type, Map<CaloricLevel, List<Dish>>> dishesByTypeAndCaloricLevel = new HashMap();
+        Map<Dish.Type, Map<Dish.CaloricLevel, List<Dish>>> dishesByTypeAndCaloricLevel = new HashMap();
 
         Map<Dish.Type, List<Dish>> dishesByType =  new HashMap();
 
@@ -116,7 +114,7 @@ public class MenuInquiry {
         for(Dish.Type type : dishesByType.keySet()){
             List<Dish> dishes = dishesByType.get(type);
 
-            Map<CaloricLevel, List<Dish>> dishesByCaloricLevel=  new HashMap();
+            Map<Dish.CaloricLevel, List<Dish>> dishesByCaloricLevel=  new HashMap();
 
             List<Dish> dietDishes = new ArrayList();
             List<Dish> normalDishes = new ArrayList();
@@ -131,13 +129,13 @@ public class MenuInquiry {
             }
 
             if (!dietDishes.isEmpty()) {
-                dishesByCaloricLevel.put(CaloricLevel.DIET, dietDishes);
+                dishesByCaloricLevel.put(Dish.CaloricLevel.DIET, dietDishes);
             }
             if (!normalDishes.isEmpty()) {
-                dishesByCaloricLevel.put(CaloricLevel.NORMAL, normalDishes);
+                dishesByCaloricLevel.put(Dish.CaloricLevel.NORMAL, normalDishes);
             }
             if (!fatDishes.isEmpty()) {
-                dishesByCaloricLevel.put(CaloricLevel.FAT, fatDishes);
+                dishesByCaloricLevel.put(Dish.CaloricLevel.FAT, fatDishes);
             }
 
             dishesByTypeAndCaloricLevel.put(type, dishesByCaloricLevel);
@@ -148,27 +146,53 @@ public class MenuInquiry {
 
     public Map<Dish.Type, Long> countDishesInGroups() {
 
-        return menu.stream().collect(groupingBy(Dish::getType, counting()));
+        Map<Dish.Type, Long> dishesPerGroup =  new HashMap();
+
+        for (Dish dish: menu){
+            if (!dishesPerGroup.containsKey(dish.getType())){
+                dishesPerGroup.put(dish.getType(), new Long(1));
+            } else {
+                Long currentCount = dishesPerGroup.get(dish.getType());
+                dishesPerGroup.put(dish.getType(), currentCount + 1);
+            }
+        }
+        return dishesPerGroup;
     }
 
-    public static Map<Dish.Type, Optional<Dish>> mostCaloricDishesByType() {
-        return menu.stream().collect(
-                groupingBy(Dish::getType,
-                        reducing((Dish d1, Dish d2) -> d1.getCalories() > d2.getCalories() ? d1 : d2)));
+    public static Map<Dish.Type, Long> sumCaloriesByType() {
+
+        Map<Dish.Type, Long> caloriesByType =  new HashMap();
+
+        for (Dish dish: menu){
+            if (!caloriesByType.containsKey(dish.getType())){
+                caloriesByType.put(dish.getType(), new Long(dish.getCalories()));
+            } else {
+                Long currentCount = caloriesByType.get(dish.getType());
+                caloriesByType.put(dish.getType(), currentCount + dish.getCalories());
+            }
+        }
+        return caloriesByType;
     }
 
-    public static Map<Dish.Type, Integer> sumCaloriesByType() {
-        return menu.stream().collect(groupingBy(Dish::getType,
-                summingInt(Dish::getCalories)));
-    }
+    public static Map<Dish.Type, Set<Dish.CaloricLevel>> caloricLevelsByType() {
 
-    public static Map<Dish.Type, Set<CaloricLevel>> caloricLevelsByType() {
-        return menu.stream().collect(
-                groupingBy(Dish::getType, mapping(
-                        dish -> { if (dish.getCalories() <= 400) return CaloricLevel.DIET;
-                        else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
-                        else return CaloricLevel.FAT; },
-                        toSet() )));
+        Map<Dish.Type, Set<Dish.CaloricLevel>> caloricLevelByType =  new HashMap();
+
+        for (Dish dish: menu){
+            Dish.CaloricLevel caloricLevel = null;
+            if (dish.getCalories() <= 400) caloricLevel = Dish.CaloricLevel.DIET;
+            else if (dish.getCalories() <= 700) caloricLevel = Dish.CaloricLevel.NORMAL;
+            else caloricLevel = Dish.CaloricLevel.FAT;
+
+            if (!caloricLevelByType.containsKey(dish.getType())){
+                caloricLevelByType.put(dish.getType(), new HashSet());
+            }
+            Set<Dish.CaloricLevel> caloricLevels = caloricLevelByType.get(dish.getType());
+            caloricLevels.add(caloricLevel);
+            caloricLevelByType.put(dish.getType(), caloricLevels);
+
+        }
+        return caloricLevelByType;
     }
 
     public Map<Boolean, List<Dish>> partitionByVegeterian() {

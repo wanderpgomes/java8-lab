@@ -3,12 +3,13 @@ package ca.intelliware.java8lab.menu;
 import java.util.*;
 
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.*;
 
 
 public class MenuInquiryJ8 {
 
-    private static final List<Dish> menu =
+    public static final List<Dish> menu =
             Arrays.asList( new Dish("pork", false, 800, Dish.Type.MEAT),
                     new Dish("beef", false, 700, Dish.Type.MEAT),
                     new Dish("chicken", false, 400, Dish.Type.MEAT),
@@ -19,7 +20,6 @@ public class MenuInquiryJ8 {
                     new Dish("prawns", false, 400, Dish.Type.FISH),
                     new Dish("salmon", false, 450, Dish.Type.FISH));
 
-    private enum CaloricLevel { DIET, NORMAL, FAT };
 
     /**
      *  Find the name of all the dishes with less than 400 calories.
@@ -46,22 +46,22 @@ public class MenuInquiryJ8 {
                    .collect(groupingBy(Dish::getType));
     }
 
-    public Map<CaloricLevel, List<Dish>> groupDishesByCaloricLevel() {
+    public Map<Dish.CaloricLevel, List<Dish>> groupDishesByCaloricLevel() {
         return menu.stream().collect(
                 groupingBy(dish -> {
-                    if (dish.getCalories() <= 400) return CaloricLevel.DIET;
-                    else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
-                    else return CaloricLevel.FAT;
+                    if (dish.getCalories() <= 400) return Dish.CaloricLevel.DIET;
+                    else if (dish.getCalories() <= 700) return Dish.CaloricLevel.NORMAL;
+                    else return Dish.CaloricLevel.FAT;
                 } ));
     }
 
-    public Map<Dish.Type, Map<CaloricLevel, List<Dish>>> groupDishedByTypeAndCaloricLevel() {
+    public Map<Dish.Type, Map<Dish.CaloricLevel, List<Dish>>> groupDishedByTypeAndCaloricLevel() {
         return menu.stream().collect(
                 groupingBy(Dish::getType,
                         groupingBy((Dish dish) -> {
-                            if (dish.getCalories() <= 400) return CaloricLevel.DIET;
-                            else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
-                            else return CaloricLevel.FAT;
+                            if (dish.getCalories() <= 400) return Dish.CaloricLevel.DIET;
+                            else if (dish.getCalories() <= 700) return Dish.CaloricLevel.NORMAL;
+                            else return Dish.CaloricLevel.FAT;
                         } )
                 )
         );
@@ -85,17 +85,33 @@ public class MenuInquiryJ8 {
                                 Optional::get)));
     }
 
-    public static Map<Dish.Type, Integer> sumCaloriesByType() {
+    public static Map<Dish.Type, Long> sumCaloriesByType() {
         return menu.stream().collect(groupingBy(Dish::getType,
-                summingInt(Dish::getCalories)));
+                summingLong(Dish::getCalories)));
     }
 
-    public static Map<Dish.Type, Set<CaloricLevel>> caloricLevelsByType() {
+    public static Map<Dish.Type, Set<Dish.CaloricLevel>> caloricLevelsByType() {
         return menu.stream().collect(
                 groupingBy(Dish::getType, mapping(
-                        dish -> { if (dish.getCalories() <= 400) return CaloricLevel.DIET;
-                        else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
-                        else return CaloricLevel.FAT; },
+                        dish -> { if (dish.getCalories() <= 400) return Dish.CaloricLevel.DIET;
+                        else if (dish.getCalories() <= 700) return Dish.CaloricLevel.NORMAL;
+                        else return Dish.CaloricLevel.FAT; },
                         toSet() )));
+    }
+
+    public Map<Boolean, List<Dish>> partitionByVegeterian() {
+        return menu.stream().collect(partitioningBy(Dish::isVegetarian));
+    }
+
+    public Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType() {
+        return menu.stream().collect(partitioningBy(Dish::isVegetarian, groupingBy(Dish::getType)));
+    }
+
+    public Object mostCaloricPartitionedByVegetarian() {
+        return menu.stream().collect(
+                partitioningBy(Dish::isVegetarian,
+                        collectingAndThen(
+                                maxBy(comparingInt(Dish::getCalories)),
+                                Optional::get)));
     }
 }

@@ -10,6 +10,8 @@ public class Dish {
     private final int calories;
     private final Type type;
 
+    public enum CaloricLevel { DIET, NORMAL, FAT };
+
     public Dish(String name, boolean vegetarian, int calories, Type type) {
         this.name = name;
         this.vegetarian = vegetarian;
