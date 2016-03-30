@@ -3,9 +3,10 @@ package ca.intelliware.java8lab.menu;
 
 import java.util.*;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.*;
-import static java.util.stream.Collectors.toSet;
 
 public class MenuInquiry {
 
@@ -196,18 +197,66 @@ public class MenuInquiry {
     }
 
     public Map<Boolean, List<Dish>> partitionByVegeterian() {
-        return menu.stream().collect(partitioningBy(Dish::isVegetarian));
+
+        Map<Boolean, List<Dish>> partition = new HashMap();
+
+        List<Dish> vegetarianDishes = new ArrayList();
+        List<Dish> nonVegetarianDishes = new ArrayList();
+
+        for (Dish dish: menu){
+            if (dish.isVegetarian()){
+                vegetarianDishes.add(dish);
+            } else {
+                nonVegetarianDishes.add(dish);
+            }
+        }
+
+        partition.put(TRUE, vegetarianDishes);
+        partition.put(FALSE, nonVegetarianDishes);
+
+        return partition;
     }
 
     public Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType() {
-        return menu.stream().collect(partitioningBy(Dish::isVegetarian, groupingBy(Dish::getType)));
+
+        Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType = new HashMap();
+
+        Map<Boolean, List<Dish>> partitionByVegeterian = partitionByVegeterian();
+
+        for(Boolean key : Arrays.asList(TRUE, FALSE)) {
+            Map<Dish.Type, List<Dish>> dishesByType = new HashMap();
+            for (Dish dish : partitionByVegeterian.get(key)) {
+                if (!dishesByType.containsKey(dish.getType())) {
+                    dishesByType.put(dish.getType(), new ArrayList());
+                }
+                dishesByType.get(dish.getType()).add(dish);
+            }
+            vegetarianDishesByType.put(key, dishesByType);
+        }
+
+        return vegetarianDishesByType;
     }
 
     public Object mostCaloricPartitionedByVegetarian() {
-        return menu.stream().collect(
-                partitioningBy(Dish::isVegetarian,
-                        collectingAndThen(
-                                maxBy(comparingInt(Dish::getCalories)),
-                                Optional::get)));
+
+        Map<Boolean, Dish> mostCaloricPartitionedByVegetarian = new HashMap();
+
+        Map<Boolean, List<Dish>> partitionByVegeterian = partitionByVegeterian();
+
+        for(Boolean key : Arrays.asList(TRUE, FALSE)) {
+            Dish mostCaloricDish = null;
+            for (Dish dish : partitionByVegeterian.get(key)) {
+                if (mostCaloricDish == null){
+                    mostCaloricDish = dish;
+                } else {
+                    mostCaloricDish = (mostCaloricDish.getCalories() > dish.getCalories()) ? mostCaloricDish : dish;
+                }
+            }
+            mostCaloricPartitionedByVegetarian.put(key, mostCaloricDish);
+        }
+
+        return mostCaloricPartitionedByVegetarian;
+
+
     }
 }

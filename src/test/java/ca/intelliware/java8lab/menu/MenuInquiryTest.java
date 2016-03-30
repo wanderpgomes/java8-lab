@@ -6,16 +6,18 @@ import org.junit.Test;
 
 import java.util.*;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.*;
 
 
 public class MenuInquiryTest {
 
-    MenuInquiryJ8 fixture;
+    private MenuInquiry fixture;
 
     @Before
     public void setUp() throws Exception {
-        fixture = new MenuInquiryJ8();
+        fixture = new MenuInquiry();
     }
 
     @Test
@@ -114,5 +116,55 @@ public class MenuInquiryTest {
         assertTrue(result.get(Dish.Type.OTHER).contains(Dish.CaloricLevel.NORMAL));
     }
 
+    @Test
+    public void testPartitionByVegeterian() {
 
+        Map<Boolean, List<Dish>> result = fixture.partitionByVegeterian();
+
+        assertEquals(5, result.get(FALSE).size());
+        assertEquals("pork", result.get(FALSE).get(0).getName());
+        assertEquals("beef", result.get(FALSE).get(1).getName());
+        assertEquals("chicken", result.get(FALSE).get(2).getName());
+        assertEquals("prawns", result.get(FALSE).get(3).getName());
+        assertEquals("salmon", result.get(FALSE).get(4).getName());
+
+        assertEquals(4, result.get(TRUE).size());
+        assertEquals("french fries", result.get(TRUE).get(0).getName());
+        assertEquals("rice", result.get(TRUE).get(1).getName());
+        assertEquals("season fruit", result.get(TRUE).get(2).getName());
+        assertEquals("pizza", result.get(TRUE).get(3).getName());
+    }
+
+
+    @Test
+    public void testVegetarianDishesByType(){
+
+        Map<Boolean, Map<Dish.Type, List<Dish>>> result = fixture.vegetarianDishesByType();
+
+        Map<Dish.Type, List<Dish>> vegetarianDishes = result.get(TRUE);
+        assertEquals(4, vegetarianDishes.get(Dish.Type.OTHER).size());
+        assertEquals("french fries", vegetarianDishes.get(Dish.Type.OTHER).get(0).getName());
+        assertEquals("rice", vegetarianDishes.get(Dish.Type.OTHER).get(1).getName());
+        assertEquals("season fruit", vegetarianDishes.get(Dish.Type.OTHER).get(2).getName());
+        assertEquals("pizza", vegetarianDishes.get(Dish.Type.OTHER).get(3).getName());
+
+        Map<Dish.Type, List<Dish>> nonVegetarianDishes = result.get(FALSE);
+        assertEquals(2, nonVegetarianDishes.get(Dish.Type.FISH).size());
+        assertEquals("prawns", nonVegetarianDishes.get(Dish.Type.FISH).get(0).getName());
+        assertEquals("salmon", nonVegetarianDishes.get(Dish.Type.FISH).get(1).getName());
+        assertEquals(3, nonVegetarianDishes.get(Dish.Type.MEAT).size());
+        assertEquals("pork", nonVegetarianDishes.get(Dish.Type.MEAT).get(0).getName());
+        assertEquals("beef", nonVegetarianDishes.get(Dish.Type.MEAT).get(1).getName());
+        assertEquals("chicken", nonVegetarianDishes.get(Dish.Type.MEAT).get(2).getName());
+    }
+
+    @Test
+    public void testMostCaloricPartitionedByVegetarian(){
+
+        Object result = fixture.mostCaloricPartitionedByVegetarian();
+
+        assertTrue(result instanceof Map);
+        assertEquals("pizza", ((Map<Boolean, Dish>)result).get(TRUE).getName());
+        assertEquals("pork", ((Map<Boolean, Dish>)result).get(FALSE).getName());
+    }
 }
