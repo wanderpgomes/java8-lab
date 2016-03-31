@@ -11,11 +11,11 @@ import org.junit.Test;
 
 public class TransactionInquiryTest {
 	
-	private TransactionInquiryJ8 fixture;
+	private TransactionInquiry fixture;
 	
 	@Before
 	public void setUp() {
-		fixture = new TransactionInquiryJ8();
+		fixture = new TransactionInquiry();
 	}
 
     @Test
