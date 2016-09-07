@@ -1,21 +1,21 @@
 package ca.intelliware.java8lab.transaction;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class TransactionInquiryTest {
 	
-	private TransactionInquiry fixture;
+	private TransactionInquiryJ8 fixture;
 	
 	@Before
 	public void setUp() {
-		fixture = new TransactionInquiry();
+		fixture = new TransactionInquiryJ8();
 	}
 
     @Test
