@@ -36,7 +36,7 @@ public class PersonProcessorJ8 {
 		System.out.println("Processing city "+ city.getName() +"...");
 	}
 
-	public static void main(String[] args){
+	public static void main(String... args){
 		PersonProcessorJ8 processor = new PersonProcessorJ8();
 		processor.process();
 	}
