@@ -29,7 +29,7 @@ public class PersonProcessorJ8 {
 				.ifPresent(PersonProcessorJ8::processCity);
 
 		//City city = personMap.get(name).getAddress().getCity();
-		//process(city);
+		//processCity(city);
 	}
 
 	private static void processCity(City city){
