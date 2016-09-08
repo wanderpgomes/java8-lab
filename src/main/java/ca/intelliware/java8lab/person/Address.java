@@ -7,6 +7,7 @@ public class Address {
 
 	public City city;
 
+
 	public Address(City city) {
 		this.city = city;
 	}
