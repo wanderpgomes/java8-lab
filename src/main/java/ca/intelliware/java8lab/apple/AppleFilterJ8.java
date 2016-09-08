@@ -21,10 +21,10 @@ public class AppleFilterJ8 {
         System.out.println(greenApples);
 
 
-        Comparator<Apple> c = (a1, a2) -> a1.getWeight().compareTo(a2.getWeight());
+        //Comparator<Apple> c = (a1, a2) -> a1.getWeight().compareTo(a2.getWeight());
 
-        inventory.sort(c);
-        System.out.println(inventory);
+        //inventory.sort(c);
+        //System.out.println(inventory);
     }
 
     public static List<Apple> filter(List<Apple> inventory, Predicate<Apple> p){
