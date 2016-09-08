@@ -10,4 +10,25 @@ public class OptionalMain {
                      .map(Insurance::getName)
                      .orElse("Unknown");
     }
+
+
+    public static void main(String ...args){
+        OptionalMain optionalMain = new OptionalMain();
+
+        Person person = new Person();
+        Car car = new Car();
+        Insurance insurance = new Insurance();
+
+        System.out.println("Insurance: "+optionalMain.getCarInsuranceName(Optional.ofNullable(person)));
+
+        person.setCar(Optional.of(car));
+        System.out.println("Insurance: "+optionalMain.getCarInsuranceName(Optional.ofNullable(person)));
+
+        car.setInsurance(Optional.of(insurance));
+        System.out.println("Insurance: "+optionalMain.getCarInsuranceName(Optional.ofNullable(person)));
+
+        insurance.setName("Kabir Insurance Inc.");
+        System.out.println("Insurance: "+optionalMain.getCarInsuranceName(Optional.ofNullable(person)));
+
+    }
 }

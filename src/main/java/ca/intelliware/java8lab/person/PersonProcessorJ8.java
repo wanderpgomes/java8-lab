@@ -27,9 +27,6 @@ public class PersonProcessorJ8 {
 				.flatMap(Person::getAddress)
 				.flatMap(Address::getCity)
 				.ifPresent(PersonProcessorJ8::processCity);
-
-		//City city = personMap.get(name).getAddress().getCity();
-		//processCity(city);
 	}
 
 	private static void processCity(City city){
@@ -47,16 +44,4 @@ public class PersonProcessorJ8 {
 		}
 	}
 
-	private void processPersonAntiPattern(String name){
-		Optional<Person> person = personMap.find(name);
-		if (person.isPresent()) {
-			Optional<Address> address = person.get().getAddress();
-			if (address.isPresent()) {
-				Optional<City> city = address.get().getCity();
-				if (city.isPresent()) {
-					processCity(city.get());
-				}
-			}
-		}
-	}
 }
